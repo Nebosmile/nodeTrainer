@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        div{
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <form name='file_control'>
+        <div>Загрузить файл
+            <input type="file" name="file">
+            <input name = 'send' type="button" value='Send'>
+
+        </div>
+        <div>
+            <input type="text" name="filename" value="" placeholder='Имя файла'><br />
+            <label for="">Удалить файл
+                <input name = 'remove' type="button" value='Remove'>
+            </label>
+            <label for="">Скачать файл
+                <input name = 'download' type="button" value='download'>
+            </label>
+        </div>
+    </form>
+    <div id='resmessager'>
+
+    </div>
+
+</body>
+<script>
+    var form = document.forms.file_control;
+
+
+    var send_file= form.elements.send,
+        remove_file = form.elements.remove,
+        download_file = form.elements.download;
+
+
+</script>
+</html>
