@@ -1,9 +1,10 @@
 var http = require('http');
 var fs = require('fs');
-var url = require('url')
+var url = require('url');
+
 
 const server = http.createServer((req, res) => {
-
+    res.writeHead(200, {'Access-Control-Allow-Origin':'*'});
     var requrl = url.parse(req.url, true)
     console.log(req.url);
     switch (req.url) {
