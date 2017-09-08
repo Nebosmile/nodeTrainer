@@ -54,13 +54,16 @@
             url: 'http://localhost:3000/save_file',
             headers:{"Content-Type": "application/x-www-form-urlencoded"},
             // dataType: 'JSON',
-            data:fd,
+            data:myfile,
             processData: false ,
             type: 'POST',
             success: function(data){
-                console.log(data);
+                alert(data);
 
             },
+            error:function (error) {
+                alert(`error ${error.status} ${error.responseText}`)
+            }
 
         })
     }
