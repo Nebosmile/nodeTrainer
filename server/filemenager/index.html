@@ -39,10 +39,39 @@
 <script>
     var form = document.forms.file_control;
 
+    var filename = form.elements.filename;
 
     var send_file = form.elements.send,
         remove_file = form.elements.remove,
         download_file = form.elements.download;
+
+    download_file.onclick = function () {
+
+        window.open('http://localhost:3000/'+ filename.value)
+        console.log(filename.value);
+        // $.ajax({
+        //     url: 'http://localhost:3000/'+ filename.value,
+        //     headers:{"Content-Type": "application/x-www-form-urlencoded"},
+        //     type:'GET',
+        //     success:function(data){
+        //
+        //     }
+        // })
+    }
+
+    remove_file.onclick = function () {
+
+        console.log(filename.value);
+        $.ajax({
+            url: 'http://localhost:3000/'+ filename.value,
+            headers:{"Content-Type": "application/x-www-form-urlencoded"},
+            type:'DELETE',
+            success:function(data){
+
+            }
+        })
+    }
+
 
     send_file.onclick = function() {
         var myfile = form.elements.file.files[0];
