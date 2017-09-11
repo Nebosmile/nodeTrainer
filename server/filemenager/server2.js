@@ -5,6 +5,7 @@ var url = require('url')
 var server = http.createServer((req, res) => {
 
     res.setHeader('Access-Control-Allow-Origin', '*')
+    res.setHeader('Access-Control-Allow-Methods', 'DELETE, GET, HEAD, POST, PUT, OPTIONS, TRACE')
     // res.writeHead(200, {'Access-Control-Allow-Origin':'*'
     // });
 
@@ -27,7 +28,20 @@ var server = http.createServer((req, res) => {
 }).listen(3000);
 
 function remove_file(req , res){
+    var filePath=req.url;
+    fs.unlink('.'+filePath, (err) => {
+        if (err) {
+            if(err.code=='ENOENT'){
+            res.statusCode=404;
+            res.end('file is not found')
+            }
+            console.log(err.code);
+            return
+        }
+        res.statusCode=200;
+        res.end('file deleted')
 
+    })
 }
 
 function read_file(req, res){
@@ -119,8 +133,7 @@ function save_file(req, res) {
         })
 
     })
-
-        req.pipe(file);
+    req.pipe(file);
 
 
 
