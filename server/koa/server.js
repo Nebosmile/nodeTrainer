@@ -7,6 +7,8 @@ if (process.env.TRACE) {
     require('./libs/trace');
 }
 
+var chat = require('./chat');
+
 const Koa = require('koa');
 const app = new Koa();
 
@@ -54,11 +56,28 @@ router.get('/user/:user/hello', async(ctx, next) => {
 }, async function(ctx) {
     ctx.body = "Hello, " + ctx.params.user;
 });
+router.get('/subscribe', async function(ctx) {
+    const answer =await chat.subscribe(ctx);
+    // ctx.body =answer
+});
+router.post('/publish', async function(ctx) {
+
+    try{
+        console.log(ctx.request.body);
+        var answer = await JSON.parse(ctx.request.body)
+    }catch(e){
+        ctx.throw(400, 'not walid json')
+    }
+        chat.publish(answer.message, ctx)
+
+
+    // ctx.body =answer
+});
 
 router.get('/', async function(ctx) {
     // ctx.redirect('/views');
     ctx.type = 'html';
-    ctx.body= fs.createReadStream('public/index2.html')
+    ctx.body= fs.createReadStream('public/index2.html');
 
 
 });

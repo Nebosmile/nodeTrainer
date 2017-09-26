@@ -1,25 +1,26 @@
 var clients = [];
 
-exports.subscribe = function(req, res) {
-  console.log("subscribe");
+exports.subscribe =  function(ctx) {
+    return new Promise(function functionName(resolve, reject) {
+        clients.push(ctx)
+    })
 
-  res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
-  clients.push(res);
-
-  res.on('close', function() {
-    clients.splice(clients.indexOf(res), 1);
-  });
 };
 
-exports.publish = function(message) {
+exports.publish = function(message, ctx) {
   console.log("publish '%s'", message);
-console.log(message);
-  clients.forEach(function(res) {
+  clients.forEach(function(res_ctx) {
     console.log("send to client");
-    res.end('its ans' +message);
+    res_ctx.status =200;
+    res_ctx.res.end(message)
+    // res.res.end(message)
+    // console.log(res.res);
+    // res.res.end('its ans' +message);
   });
+  ctx.body='ok'
 
   clients = [];
+  return ctx;
 };
 
 setInterval(function() {

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
+
+</head>
+<body class="container">
+
+
+
+<div id='app'>
+    <form name='userset'>
+        <label for="">Username
+            <input type="text" name="name" v-model='user_param.name'>
+        </label>
+        <label for="">Surname
+            <input type="text" name="surname" v-model='user_param.surname'>
+        </label>
+        <label for="">Nickname
+            <input type="text" name="nickname" v-model='user_param.nickname'>
+        </label>
+        <label for="">gender
+            <p>male</p>
+            <input type="radio"  value="male" v-model='user_param.gender'>
+            <p>famale</p>
+            <input type="radio"  value="famale" v-model='user_param.gender'>
+        </label>
+        <label for="">Age
+            <input type="number" name="" v-model='user_param.age'>
+        </label>
+        <input type="button" @click='set_users' name="" value="Send">
+    </form>
+
+</div>
+<!-- <script src='../js/axios.js'></script> -->
+<script src='https://unpkg.com/vue'></script>
+<script src='https://code.jquery.com/jquery-3.2.1.min.js'></script>
+<script>
+
+var app = new Vue({
+    el:'#app',
+    data:{
+        users_list:'',
+        mainlink:'http://localhost:3000',
+        users_table:[
+            {value:'id', name:'id'},
+            {value:'name', name:'Name'},
+            {value:'surname', name:'surname'},
+            {value:'nickname', name:'nickname'},
+            {value:'gender', name:'gender'},
+            {value:'age', name:'age'},
+        ],
+        user_param:{
+            name:'rfdggg',
+            surname:'fdbb',
+            nickname:'',
+            gender:'',
+            age:''
+        }
+    },
+    methods:{
+        set_users:function(e){
+                var newthis = this;
+                e.preventDefault()
+                var form_data = {
+                    name:newthis.user_param.name,
+                    surname:newthis.user_param.surname,
+                    gender:newthis.user_param.gender,
+                    age:Number(newthis.user_param.age)
+                }
+                // form_data =JSON.stringify(form_data);
+                console.log(form_data);
+
+                var newthis = this;
+                // axios.post('http://localhost:3000/setuser', form_data)
+                //   .then(function (response) {
+                //     console.log(response);
+                //   })
+                //   .catch(function (error) {
+                //     console.log(error);
+                //   });
+
+
+
+                // var xhr = new XMLHttpRequest();
+                // // xhr.setRequestHeader('Content-Type', 'application/json;charset=utf-8');
+                // xhr.open("POST", "http://localhost:3000/setuser", true);
+                // // xhr.setRequestHeader('Content-Type', 'application/json;charset=utf-8');
+                // xhr.send(JSON.stringify(form_data));
+
+
+
+                $.ajax({
+                  url: 'http://localhost:3000/setuser',
+                //   headers: {
+                //     "Content-Type": "application/x-www-form-urlencoded"
+                //   },
+                //   xhrFields: {
+                //     withCredentials: true
+                //   },
+                  type: 'POST',
+                  data: JSON.stringify(form_data),
+                  dataType:'text',
+                  success: function(data) {
+                    console.log(data);
+                  }
+        })
+    }
+    },
+    mounted(){
+        console.log('sdrgffg');
+    }
+})
+
+
+</script>
+</body>
+</html>
