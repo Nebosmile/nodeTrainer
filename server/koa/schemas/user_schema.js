@@ -1,24 +1,19 @@
-
 const mongoose = require('mongoose');
 const userSchema = mongoose.Schema({
-    name:{
-        type:String
+    name: {
+        type: String,
+        // unique: true
     },
-    surname:String,
-    nickname:{
-        type:String,
-        unique:true,
-        required: 'Укажите nickname',
+    surname: String,
+    nickname: {
+        type: String,
+        // unique: true,
+        required: 'Укажите nickname'
     },
-    gender:String,
-    age:{
-        type:Number
+    gender: String,
+    age: {
+        type: Number
     }
-    },
-    {
-      timestamps: true
-    }
+})
 
-)
-
-module.exports = mongoose.model("User",userSchema);
+module.exports = mongoose.model("User", userSchema);

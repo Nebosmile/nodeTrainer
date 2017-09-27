@@ -3,7 +3,21 @@
 <head>
   <meta charset="utf-8">
   <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
-
+<style>
+    tr>td, tr>th {
+        border: 1px solid #ddd;
+        text-align: left;
+        padding: 8px;
+        font-size: 12px;
+    }
+    table {
+    width: 100%;
+    max-width: 100%;
+    margin-bottom: 20px;
+    border-spacing: 0;
+    border-collapse: collapse;
+}
+</style>
 </head>
 <body class="container">
 
@@ -30,7 +44,23 @@
             <input type="number" name="" v-model='user_param.age'>
         </label>
         <input type="button" @click='set_users' name="" value="Send">
+    </br>
+        <input type="button"  @click='get_users' name="" value="Get users">
     </form>
+
+    <table>
+        <thead>
+            <tr>
+                <th v-for='item in users_table'>{{item.name}}</th>
+            </tr>
+
+        </thead>
+        <tbody>
+            <tr v-for='item in users_list'>
+                <th v-for='elem in users_table'>{{item[elem.value]}}</th>
+            </tr>
+        </tbody>
+    </table>
 
 </div>
 <!-- <script src='../js/axios.js'></script> -->
@@ -52,20 +82,37 @@ var app = new Vue({
             {value:'age', name:'age'},
         ],
         user_param:{
-            name:'rfdggg',
-            surname:'fdbb',
+            name:'',
+            surname:'',
             nickname:'',
             gender:'',
             age:''
         }
     },
     methods:{
+        get_users:function() {
+            var newthis = this;
+            $.ajax({
+                url:newthis.mainlink+'/getusers',
+                type:"GET",
+                dataType:'JSON',
+                success:function (data) {
+                    console.log(data);
+                    newthis.users_list = data;
+                },
+                error:function (error) {
+                    console.log(error);
+                }
+
+            })
+        },
         set_users:function(e){
                 var newthis = this;
                 e.preventDefault()
                 var form_data = {
                     name:newthis.user_param.name,
                     surname:newthis.user_param.surname,
+                    nickname:newthis.user_param.nickname,
                     gender:newthis.user_param.gender,
                     age:Number(newthis.user_param.age)
                 }
@@ -100,10 +147,11 @@ var app = new Vue({
                 //     withCredentials: true
                 //   },
                   type: 'POST',
-                  data: JSON.stringify(form_data),
+                  data: form_data,
                   dataType:'text',
                   success: function(data) {
                     console.log(data);
+                    newthis.get_users()
                   }
         })
     }
