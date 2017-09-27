@@ -1,5 +1,7 @@
 const Router = require('koa-router');
 const router = new Router();
+var User_model= require('./schemas/user_schema');
+const fs = require('fs');
 
 router.get('/getusers', async function (ctx,next) {
     console.log('dfghdh');
@@ -44,3 +46,6 @@ router.get('/', async function (ctx) {
     ctx.type ='html';
     ctx.body = fs.createReadStream('public/user.html')
 });
+
+
+exports.init =(app)=>app.use(router.routes())
