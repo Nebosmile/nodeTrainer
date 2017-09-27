@@ -10,6 +10,13 @@ router.get('/getusers', async function (ctx,next) {
     ctx.type='json'
     ctx.body =answer;
 });
+router.post('/remove_user', async function (ctx,next) {
+    console.log('remove_user');
+    var answer = await User_model.remove({'_id':ctx.request.body._id})
+    console.log(answer);
+    ctx.type='json'
+    ctx.body =answer;
+});
 router.get('/js/:filename', async function (ctx) {
     console.log(ctx.params.filename);
     ctx.type ='js';
@@ -27,6 +34,8 @@ router.post('/setuser', async function(ctx, next) {
         age:ctx.request.body.age
     });
     console.log('is model');
+
+
     await user.save(function (err, result) {
         if(err){
             console.log(err);

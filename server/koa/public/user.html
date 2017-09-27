@@ -17,6 +17,11 @@
     border-spacing: 0;
     border-collapse: collapse;
 }
+
+.clickclass:hover{
+    cursor: pointer;
+    background-color:#cecece;
+}
 </style>
 </head>
 <body class="container">
@@ -56,8 +61,14 @@
 
         </thead>
         <tbody>
-            <tr v-for='item in users_list'>
-                <th v-for='elem in users_table'>{{item[elem.value]}}</th>
+            <tr v-for='(item, index) in users_list'>
+                <th
+                    v-for='elem in users_table'
+                    v-bind:class="{clickclass:(elem.value=='remove')}"
+                    @click="(elem.value=='remove')? remove_user(item._id): null"
+                >
+                    {{value_return(item[elem.value],elem.value, index+1)}}
+                </th>
             </tr>
         </tbody>
     </table>
@@ -74,12 +85,13 @@ var app = new Vue({
         users_list:'',
         mainlink:'http://localhost:3000',
         users_table:[
-            {value:'id', name:'id'},
+            {value:'number', name:'number'},
             {value:'name', name:'Name'},
             {value:'surname', name:'surname'},
             {value:'nickname', name:'nickname'},
             {value:'gender', name:'gender'},
             {value:'age', name:'age'},
+            {value:'remove', name:'remove'}
         ],
         user_param:{
             name:'',
@@ -90,6 +102,33 @@ var app = new Vue({
         }
     },
     methods:{
+        remove_user(id){
+            // console.log('remove'+id);
+            var newthis = this;
+            $.ajax({
+                url:newthis.mainlink+'/remove_user',
+                type:"POST",
+                dataType:'JSON',
+                data:{'_id':id},
+                success:function (data) {
+                    console.log(data);
+                    newthis.get_users();
+                },
+                error:function (error) {
+                    console.log(error);
+                }
+
+            })
+        },
+        value_return(value, elemname,index){
+            if(elemname== 'remove'){
+                return 'remove'
+            }else if(elemname=='number'){
+                return  index;
+            }else{
+                return value;
+            }
+        },
         get_users:function() {
             var newthis = this;
             $.ajax({
