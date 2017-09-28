@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const beautifyUnique = require('mongoose-beautiful-unique-validation');
+mongoose.plugin(beautifyUnique);
 const userSchema = mongoose.Schema({
     name: {
         type: String,
@@ -7,7 +9,7 @@ const userSchema = mongoose.Schema({
     surname: String,
     nickname: {
         type: String,
-        // unique: true,
+        unique: 'Two users cannot share the same username ({VALUE})',
         required: 'Укажите nickname'
     },
     gender: String,

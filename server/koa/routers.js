@@ -4,7 +4,6 @@ var User_model= require('./schemas/user_schema');
 const fs = require('fs');
 
 router.get('/getusers', async function (ctx,next) {
-    console.log('dfghdh');
     var answer = await User_model.find({})
     console.log(answer);
     ctx.type='json'
@@ -35,16 +34,19 @@ router.post('/setuser', async function(ctx, next) {
     });
     console.log('is model');
 
+    try{
+        await user.save(function (err, result) {
 
-    await user.save(function (err, result) {
-        if(err){
-            console.log(err);
-        }
-        console.log('affter error');
-        console.log(result);
-    })
-    ctx.type ='text';
-    ctx.body = 'its ok'
+        })
+        ctx.type ='text';
+        ctx.body = 'its ok'
+    }catch(err){
+        if(err.name !='ValidationError') throw err;
+        console.log(err);
+        ctx.throw(400, err.message);
+    }
+
+
     // ctx.body =answer
 });
 router.get('/hello', async function (ctx) {
