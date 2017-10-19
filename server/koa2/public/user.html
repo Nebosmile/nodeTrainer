@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
+	<style>
+		tr>td,
+		tr>th {
+			border: 1px solid #ddd;
+			text-align: left;
+			padding: 8px;
+			font-size: 12px;
+			max-width: 100px;
+			overflow: hidden;
+		}
+
+		table {
+			width: 100%;
+			max-width: 100%;
+			margin-bottom: 20px;
+			border-spacing: 0;
+			border-collapse: collapse;
+		}
+
+		.clickclass:hover {
+			cursor: pointer;
+			background-color: #cecece;
+		}
+	</style>
+</head>
+
+<body class="container">
+
+
+
+	<div id='app'>
+		<form name='userset'>
+			<label for="">Username
+            <input type="text" name="name" v-model='user_param.name'>
+        </label>
+			<label for="">Surname
+            <input type="text" name="surname" v-model='user_param.surname'>
+        </label>
+			<label for="">Nickname
+            <input type="text" name="nickname" v-model='user_param.nickname'>
+        </label>
+			<label for="">Password
+            <input type="text" name="password" v-model='user_param.password'>
+        </label>
+			<label for="">gender
+            <p>male</p>
+            <input type="radio"  value="male" v-model='user_param.gender'>
+            <p>famale</p>
+            <input type="radio"  value="famale" v-model='user_param.gender'>
+        </label>
+			<label for="">Age
+            <input type="number" name="" v-model='user_param.age'>
+        </label>
+			<input type="button" @click='set_users' name="" value="Send">
+			<input type="button" @click='check_users' name="" value="Check">
+			</br>
+			<input type="button" @click='get_users' name="" value="Get users">
+		</form>
+
+		<table>
+			<thead>
+				<tr>
+					<th v-for='item in users_table'>{{item.name}}</th>
+				</tr>
+
+			</thead>
+			<tbody>
+				<tr v-for='(item, index) in users_list'>
+					<td v-for='elem in users_table' v-bind:class="{clickclass:(elem.value=='remove')}" @click="(elem.value=='remove')? remove_user(item._id): null">
+						{{value_return(item[elem.value],elem.value, index+1)}}
+					</td>
+				</tr>
+			</tbody>
+		</table>
+
+	</div>
+	<!-- <script src='../js/axios.js'></script> -->
+	<script src='https://unpkg.com/vue'></script>
+	<script src='https://code.jquery.com/jquery-3.2.1.min.js'></script>
+	<script>
+		var app = new Vue({
+			el: '#app',
+			data: {
+				users_list: '',
+				mainlink: 'http://localhost:3000/usercontrol',
+				users_table: [{
+						value: 'number',
+						name: 'number'
+					},
+					{
+						value: 'name',
+						name: 'Name'
+					},
+					{
+						value: 'surname',
+						name: 'surname'
+					},
+					{
+						value: 'nickname',
+						name: 'nickname'
+					},
+					{
+						value: 'passwordHash',
+						name: 'password'
+					},
+					{
+						value: 'gender',
+						name: 'gender'
+					},
+					{
+						value: 'age',
+						name: 'age'
+					},
+					{
+						value: 'remove',
+						name: 'remove'
+					}
+				],
+				user_param: {
+					name: '',
+					surname: '',
+					nickname: '',
+					gender: '',
+					age: '',
+					password: ''
+				}
+			},
+			methods: {
+				remove_user(id) {
+					// console.log('remove'+id);
+					var newthis = this;
+					$.ajax({
+						url: newthis.mainlink + '/remove_user',
+						type: "POST",
+						dataType: 'JSON',
+						data: {
+							'_id': id
+						},
+						success: function(data) {
+							console.log(data);
+							newthis.get_users();
+						},
+						error: function(error) {
+							console.log(error);
+						}
+
+					})
+				},
+				value_return(value, elemname, index) {
+					if (elemname == 'remove') {
+						return 'remove'
+					} else if (elemname == 'number') {
+						return index;
+					} else {
+						return value;
+					}
+				},
+				check_users() {
+					var newthis = this;
+					var form_data = {
+						nickname: newthis.user_param.nickname,
+						password: newthis.user_param.password,
+					}
+					console.log(form_data);
+					var newthis = this;
+					$.ajax({
+						url: newthis.mainlink + '/checkuser',
+						type: 'POST',
+						data: form_data,
+						dataType: 'text',
+						success: function(data) {
+							console.log(data);
+						}
+					})
+				},
+				get_users() {
+					var newthis = this;
+					$.ajax({
+						url: newthis.mainlink + '/getusers',
+						type: "GET",
+						dataType: 'JSON',
+						success: function(data) {
+							console.log(data);
+							newthis.users_list = data;
+						},
+						error: function(error) {
+							console.log(error);
+						}
+
+					})
+				},
+				set_users: function(e) {
+					var newthis = this;
+					e.preventDefault()
+					var form_data = {
+						name: newthis.user_param.name,
+						surname: newthis.user_param.surname,
+						nickname: newthis.user_param.nickname,
+						password: newthis.user_param.password,
+						gender: newthis.user_param.gender,
+						age: Number(newthis.user_param.age)
+					}
+					// form_data =JSON.stringify(form_data);
+					console.log(form_data);
+
+					var newthis = this;
+					// axios.post('http://localhost:3000/setuser', form_data)
+					//   .then(function (response) {
+					//     console.log(response);
+					//   })
+					//   .catch(function (error) {
+					//     console.log(error);
+					//   });
+
+
+
+					// var xhr = new XMLHttpRequest();
+					// // xhr.setRequestHeader('Content-Type', 'application/json;charset=utf-8');
+					// xhr.open("POST", "http://localhost:3000/setuser", true);
+					// // xhr.setRequestHeader('Content-Type', 'application/json;charset=utf-8');
+					// xhr.send(JSON.stringify(form_data));
+
+
+
+					$.ajax({
+						url: newthis.mainlink + '/setuser',
+						//   headers: {
+						//     "Content-Type": "application/x-www-form-urlencoded"
+						//   },
+						//   xhrFields: {
+						//     withCredentials: true
+						//   },
+						type: 'POST',
+						data: form_data,
+						dataType: 'text',
+						success: function(data) {
+							console.log(data);
+							newthis.get_users()
+						}
+					})
+				}
+			},
+			mounted() {
+				console.log('sdrgffg');
+			}
+		})
+	</script>
+</body>
+
+</html>
